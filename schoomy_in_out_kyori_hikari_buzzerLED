@@ -1,0 +1,69 @@
+// はじめ光っていて、距離20㎝以下でなおかつ電気を消すとブザーが鳴って、光が消える。
+
+#define cdsPin 4 //光センサーが1番ピンに入っています。
+
+#define echoPin 18 //距離センサーの「echo」が11番ピン
+#define trigPin 17 //距離センサーの「trig」が12番ピン
+
+#define buzzerPin 5 //ブザーが2番ピン
+
+#define ledPin 9 //LEDが4番ピン
+
+double Duration = 0; //受信した間隔
+double Distance = 0; //距離
+
+void setup() {
+
+  Serial.begin(9600);
+  pinMode(echoPin,INPUT_PULLUP);
+  pinMode(trigPin,OUTPUT);
+  
+  pinMode(cdsPin, INPUT_PULLUP);
+  pinMode(buzzerPin, OUTPUT);
+
+}
+
+void loop() {
+
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, LOW); //超音波を出力
+  delayMicroseconds(10);
+  digitalWrite(trigPin, HIGH);
+  Duration = pulseIn(echoPin, LOW); //センサからの入力
+
+  // R1のAD値を取得
+  float cds_ad = analogRead(cdsPin);
+
+  // AD値を電圧値に変換
+  float cds_v = cds_ad * 5 / 1023;
+
+  // 電圧値より、Lux計算
+  float lux = 10000 * cds_v / (5 - cds_v) / 1000;
+
+  Serial.print(lux);
+  Serial.println(" Lux ");
+
+  if (Duration > 0) {
+  Duration = Duration/2; //往復距離を半分
+
+  Distance = Duration*340*100/1000000; //音速を340m/sに設定 
+  Serial.print("Distance:");
+  Serial.print(Distance);
+  Serial.println("cm");
+
+  }
+
+if (Distance < 20 && lux < 20) { //Distance<20(20cmより小さい)、lux < 20(20luxより小さい)→＜、＞と数値の変更ができます。
+
+   digitalWrite(ledPin, HIGH); //HIGH：光る　LOW：光らない(LEDのこと)
+   digitalWrite(buzzerPin, LOW); //HIGH：鳴る　LOW：鳴らない
+   delay(200);
+
+ } else {
+   digitalWrite(ledPin, LOW); //HIGH：光る　LOW：光らない(LEDのこと)
+   digitalWrite(buzzerPin, HIGH); //HIGH：鳴る　LOW：鳴らない
+   delay(200);
+ }
+
+}
