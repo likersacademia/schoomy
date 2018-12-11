@@ -1,0 +1,56 @@
+// 電気が消え、かつスイッチが押されるとブザーが鳴る
+
+#define cdsPin 4 //光センサーが1番ピン
+#define buttonPin 18 //スイッチが12番ピン
+
+#define buzzerPin 5 //LEDが2番ピン
+
+bool buttonState = 0;
+
+
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(cdsPin, INPUT);
+  pinMode(buttonPin, INPUT);
+  
+  pinMode(buzzerPin, OUTPUT);
+
+}
+
+void loop() {
+// R1のAD値を取得
+ float cds_ad = analogRead(cdsPin);
+// AD値を電圧値に変換
+ float cds_v = cds_ad * 5 / 1023;
+// 電圧値より、Lux計算
+ float lux = 10000 * cds_v / (5 - cds_v) / 1000;
+ Serial.print(lux);
+ Serial.println(" Lux ");
+
+ if (lux > 20) {
+ Serial.println("High lux");
+ delay(2000);
+
+  } else {
+
+  Serial.println("Low lux");
+  delay(2000);
+
+  }
+
+  buttonState = digitalRead(buttonPin);
+
+  if (lux < 20 && buttonState == LOW) { //lux < 20(20luxより小さい)→＜、＞と数値の変更ができます。buttonState == HIGH(スイッチが押される)
+
+    digitalWrite(buzzerPin, LOW); //HIGH：鳴る　LOW：鳴らない
+    delay(200);
+
+  } else { //上以外のときは、下のことが起こる
+
+    digitalWrite(buzzerPin, HIGH); //HIGH：鳴る　LOW：鳴らない
+    delay(200);
+
+  }
+
+}
