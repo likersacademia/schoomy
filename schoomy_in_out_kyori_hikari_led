@@ -2,10 +2,10 @@
 
 #define cdsPin 4 //光センサーが1番ピンに入っています。
 
-#define echoPin 11 //距離センサーの「echo」が11番ピン
-#define trigPin 12 //距離センサーの「trig」が12番ピン
+#define echoPin 18 //距離センサーの「echo」が11番ピン
+#define trigPin 17 //距離センサーの「trig」が12番ピン
 
-#define ledPin 2 //LEDが2番ピン
+#define ledPin 5 //LEDが2番ピン
 
 double Duration = 0; //受信した間隔
 double Distance = 0; //距離
@@ -13,22 +13,22 @@ double Distance = 0; //距離
 void setup() {
 
   Serial.begin(9600);
-  pinMode(echoPin,INPUT);
+  pinMode(echoPin,INPUT_PULLUP);
   pinMode(trigPin,OUTPUT);
   
-  pinMode(cdsPin, INPUT);
+  pinMode(cdsPin, INPUT_PULLUP);
   pinMode(ledPin, OUTPUT);
 
 }
 
 void loop() {
 
-  digitalWrite(trigPin, LOW);
+  digitalWrite(trigPin, HIGH);
   delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH); //超音波を出力
+  digitalWrite(trigPin, LOW); //超音波を出力
   delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  Duration = pulseIn(echoPin, HIGH); //センサからの入力
+  digitalWrite(trigPin, HIGH);
+  Duration = pulseIn(echoPin, LOW); //センサからの入力
 
   // R1のAD値を取得
   float cds_ad = analogRead(cdsPin);
@@ -54,11 +54,11 @@ void loop() {
 
 if (Distance < 20 && lux < 20) { //Distance<20(20cmより小さい)、lux < 20(20luxより小さい)→＜、＞と数値の変更ができます。
 
-   digitalWrite(ledPin, HIGH); //HIGH：光る　LOW：光らない(LEDのこと)
+   digitalWrite(ledPin, LOW); //HIGH：光る　LOW：光らない(LEDのこと)
    delay(200);
 
  } else {
-   digitalWrite(ledPin, LOW); //HIGH：光る　LOW：光らない(LEDのこと)
+   digitalWrite(ledPin, HIGH); //HIGH：光る　LOW：光らない(LEDのこと)
    delay(200);
  }
 
