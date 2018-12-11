@@ -1,0 +1,80 @@
+// 距離20㎝以下でなおかつ電気を消すとLEDが光り、モーターが回る
+
+#include <Servo.h> //モーターを使うときは、これを入れます。
+
+#define cdsPin 4 //光センサーが11番ピン
+
+#define echoPin 18 //距離センサーの「echo」が11番ピン
+#define trigPin 17 //距離センサーの「trig」が12番ピン
+
+#define ledPin 6 //LED2番ピン
+#define motorPin 9 //モーターが12番ピン
+
+
+double Duration = 0; //受信した間隔
+double Distance = 0; //距離
+
+Servo myservo;
+
+void setup() {
+
+  Serial.begin(9600);
+  myservo.attach(motorPin,700,2300);
+ 
+  pinMode(echoPin,INPUT_PULLUP);
+  pinMode(trigPin,OUTPUT);
+  
+  pinMode(cdsPin, INPUT_PULLUP);
+  pinMode(ledPin, OUTPUT);
+
+}
+
+void loop() {
+
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, LOW);超音波を出力
+  delayMicroseconds(10);
+  digitalWrite(trigPin, HIGH);
+  Duration = pulseIn(echoPin, LOW)/センサからの入力
+
+  // R1のAD値を取得
+  float cds_ad = analogRead(cdsPin);
+
+  // AD値を電圧値に変換
+  float cds_v = cds_ad * 5 / 1023;
+
+  // 電圧値より、Lux計算
+  float lux = 10000 * cds_v / (5 - cds_v) / 1000;
+
+  Serial.print(lux);
+  Serial.println(" Lux ");
+
+  if (Duration > 0) {
+  Duration = Duration/2; //往復距離を半分
+
+  Distance = Duration*340*100/1000000; //音速を340m/sに設定 
+  Serial.print("Distance:");
+  Serial.print(Distance);
+  Serial.println("cm");
+
+  }
+
+if (Distance < 20 && lux < 20) { //Distance<20(20cmより小さい)と、lux < 20(20luxより暗い)→＜、＞と数値の変更ができます。
+
+   digitalWrite(ledPin, LOW); //HIGH：光る　LOW：光らない
+   delay(200);
+
+//時計回り(when 1450～700 µsec)　逆時計回り(when 1550～2300 µsec)　1500に近い方が回転がおそくなる 
+  myservo.write(1400); //時計回りです
+  delay(100);
+ 
+  } else {
+
+  digitalWrite(ledPin, HIGH)HIGH：光る　LOW：光らない
+  myservo.write(1500); //モーターが止まる数値です。
+  delay(100);
+
+ }
+
+}
