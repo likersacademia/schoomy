@@ -2,7 +2,7 @@
 
 #include <Servo.h> //モーターを使うときは、これを入れます。
 
-#define cdsPin 18 //光センサーが11番ピン
+#define cdsPin 4 //光センサーが11番ピン
 
 #define echoPin 17 //距離センサーの「echo」が11番ピン
 #define trigPin 19 //距離センサーの「trig」が12番ピン
