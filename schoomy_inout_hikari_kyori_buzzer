@@ -1,6 +1,6 @@
 // 距離20㎝以下でなおかつ電気を消すとブザーが鳴る
 
-#define cdsPin 18 //光センサーが1番ピンに入っています。
+#define cdsPin 4 //光センサーが1番ピンに入っています。
 
 #define echoPin 17 //距離センサーの「echo」が11番ピン
 #define trigPin 19 //距離センサーの「trig」が12番ピン
