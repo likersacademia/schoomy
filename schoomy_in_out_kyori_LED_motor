@@ -1,0 +1,73 @@
+// 15センチ以内だと、モーターが5秒間右回転し、3秒間左回転しLEDもつくプログラム
+
+
+
+#include <Servo.h>　//サーボモーターを動かす関数を用意します
+
+#define moterPin 5 //モーターが3番ピン
+
+#define echoPin 18 //距離センサーの「echo」が11番ピン
+#define trigPin 17 //距離センサーの「trig」が12番ピン
+
+#define ledPin 6 //LEDが2番ピン
+
+
+double Duration = 0; //受信した間隔
+double Distance = 0; //距離
+
+
+
+Servo myservo;
+
+
+
+void setup() {
+
+  pinMode(echoPin,INPUT_PULLUP);
+  pinMode(trigPin,OUTPUT);
+  pinMode(ledPin, OUTPUT);
+  myservo.attach(moterPin,700,2300);
+  Serial.begin(9600);
+
+}
+
+void loop() {
+ digitalWrite(trigPin, HIGH);
+ delayMicroseconds(2);
+ digitalWrite(trigPin, LOW); //超音波を出力
+ delayMicroseconds(10);
+ digitalWrite(trigPin, HIGH);
+ Duration = pulseIn(echoPin, LOW); //センサからの入力
+ if (Duration > 0) {
+ Duration = Duration/2; //往復距離を半分
+ Distance = Duration*340*100/1000000; //音速を340m/sに設定 
+ Serial.print("Distance:");
+ Serial.print(Distance);
+ Serial.println("cm");
+
+
+ if(Distance<15){ //Distance<15(15cmより小さい)→＜、＞と数値の変更ができます。
+
+ digitalWrite(ledPin, LOW); //HIGH：光る　LOW：光らない
+ delay(200);
+
+ //時計回り(when 1450～700 µsec)　逆時計回り(when 1550～2300 µsec)　1500に近い方が回転がおそくなる
+ myservo.write(700); //700はモーターが右回転で一番速く回ります
+ delay(5000); //5秒間
+ 
+ myservo.write(2300); //2300はモーターが左回転で一番速く回ります
+ delay(3000); //3秒間
+ 
+ 
+  }else{
+
+  myservo.write(1500); //1500はモーターが止まる数値です。変更可能です。
+  
+  digitalWrite(ledPin, HIGH); //HIGH：光る　LOW：光らない
+  delay(200);
+
+  }
+
+ }
+
+}
