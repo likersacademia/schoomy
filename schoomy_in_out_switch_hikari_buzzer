@@ -11,8 +11,8 @@ bool buttonState = 0;
 void setup() {
   Serial.begin(9600);
 
-  pinMode(cdsPin, INPUT);
-  pinMode(buttonPin, INPUT);
+  pinMode(cdsPin, INPUT_PULLUP);
+  pinMode(buttonPin, INPUT_PULLUP);
   
   pinMode(buzzerPin, OUTPUT);
 
