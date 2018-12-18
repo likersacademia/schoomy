@@ -1,0 +1,50 @@
+// 距離が10cmより小さくなるとLEDが光る
+
+#define echoPin 18 //距離センサーの「echo」が11番ピン
+#define trigPin 17 //距離センサーの「trig」が12番ピン
+
+#define ledPin 5 //LEDが5番ピン
+
+double Duration = 0; //受信した間隔
+double Distance = 0; //距離
+
+void setup() {
+ Serial.begin(9600);
+ pinMode(ledPin, OUTPUT);
+ pinMode(echoPin,INPUT_PULLUP);
+ pinMode(trigPin,OUTPUT);
+
+}
+
+void loop() {
+ digitalWrite(trigPin, HIGH);
+ delayMicroseconds(2);
+ digitalWrite(trigPin, LOW); //超音波を出力
+ delayMicroseconds(10);
+ digitalWrite(trigPin, HIGH);
+ Duration = pulseIn(echoPin, LOW); //センサからの入力
+
+ if (Duration > 0) {
+ Duration = Duration/2; //往復距離を半分
+ Distance = Duration*340*100/1000000; //音速を340m/sに設定 
+
+ Serial.print("Distance:");
+ Serial.print(Distance);
+ Serial.println("cm");  
+
+  }
+
+
+  if (Distance < 10 ) { //Distance<15(15cmより小さい)→＜、＞と数値の変更ができます。
+
+    digitalWrite(ledPin, LOW); //HIGH：光る　LOW：光らない
+    delay(200);
+
+  } else {
+
+    digitalWrite(ledPin, HIGH); //HIGH：光る　LOW：光らない
+    delay(200);
+
+  }
+
+}
