@@ -1,0 +1,43 @@
+//ボタンを押すと、モーターが回り、もう一度、ボタンを押すとモーターが止まるプログラム。(スイッチON、OFFで必要なプログラムは//でマークをつけています。)
+
+#include <Servo.h>
+
+#define motorPin 6
+#define buttonPin 18 //スイッチON、OFF
+
+int buttonState = 0; //スイッチON、OFF
+
+Servo myservo;
+
+void setup() {
+ myservo.attach(motorPin,700,2300);
+
+ pinMode(buttonPin, INPUT_PULLUP); //スイッチON、OFF
+ Serial.begin(9600);
+
+}
+
+void loop() {
+ if (digitalRead(buttonPin) == LOW){ //スイッチON、OFF
+ buttonState++; //スイッチON、OFF
+ 
+ if(buttonState >1) buttonState = 0; //スイッチON、OFF
+ delay(300); //スイッチON、OFF
+
+  }
+  
+  if (buttonState == 1) { //スイッチON、OFF
+  Serial.println("Switch ON");  //スイッチON、OFF
+  
+  //時計回り(when 1450～700 µsec)　逆時計回り(when 1550～2300 µsec)　1500に近い方が回転がおそくなる 
+  myservo.write(1400); //時計回り
+  delay(100);
+
+  } else {
+  
+  myservo.write(1500); //stop
+  delay(100);
+
+  }
+
+}
