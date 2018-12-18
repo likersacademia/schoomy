@@ -1,0 +1,73 @@
+// 電気が消え、かつスイッチが押されるとLEDがついて、モーターが回る
+
+#include <Servo.h>　//サーボモーターを動かす関数を用意します
+Servo myservo; //サーボモーターを動かす関数を用意します
+
+#define cdsPin 18 //光センサーが1番ピン
+#define buttonPin 17 //スイッチが12番ピン
+
+#define ledPin 5 //LEDが2番ピン
+
+#define moterPin 6 //モーターが3番ピン
+
+
+bool buttonState = 0;
+
+
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(cdsPin, INPUT);
+  pinMode(buttonPin, INPUT);
+
+  myservo.attach(moterPin,700,2300);
+  
+  pinMode(ledPin, OUTPUT);
+
+}
+
+void loop() {
+// R1のAD値を取得
+ float cds_ad = analogRead(cdsPin);
+// AD値を電圧値に変換
+ float cds_v = cds_ad * 5 / 1023;
+// 電圧値より、Lux計算
+ float lux = 10000 * cds_v / (5 - cds_v) / 1000;
+ Serial.print(lux);
+ Serial.println(" Lux ");
+
+ if (lux > 20) {
+ Serial.println("High lux");
+ delay(2000);
+
+  } else {
+
+  Serial.println("Low lux");
+  delay(2000);
+
+  }
+
+  buttonState = digitalRead(buttonPin);
+
+  if (lux < 20 && buttonState == LOW) { //lux < 20(20luxより小さい)→＜、＞と数値の変更ができます。buttonState == HIGH(スイッチが押される)
+
+    digitalWrite(ledPin, LOW); //HIGH：光る　LOW：光らない
+    delay(200);
+
+    myservo.write(700); //700はモーターが一番早く回る数値です。変更可能です。
+    delay(200);
+ 
+    
+
+  } else { //上以外のときは、下のことが起こる
+
+    digitalWrite(ledPin, HIGH); //HIGH：光る　LOW：光らない
+    delay(200);
+
+    myservo.write(1500); //700はモーターが一番早く回る数値です。変更可能です。
+    delay(200);
+
+
+  }
+
+}
