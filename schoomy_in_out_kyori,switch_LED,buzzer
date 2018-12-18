@@ -1,0 +1,69 @@
+// 距離20cm以内でスイッチが押されるとLEDが光り、ブザーも鳴る
+
+
+
+#define ledPin 5 //LEDが2番ピン
+
+#define buzzerPin 6 //ブザーが9番ピン
+
+#define echoPin 18 //距離センサーの「echo」が5番ピン
+#define trigPin 19 //距離センサーの「trig」が6番ピン
+
+#define buttonPin 17  //スイッチが12番ピン
+
+bool buttonState = 0; //スイッチのこと
+
+double Duration = 0; //受信した間隔(距離センサーのこと)
+double Distance = 0; //距離(距離センサーのこと)
+
+
+
+void setup() {
+  Serial.begin(9600);
+  
+  pinMode(ledPin, OUTPUT); //LEDのこと
+  pinMode(buzzerPin, OUTPUT); //ブザーのこと
+  pinMode(echoPin,INPUT_PULLUP); //距離センサーのこと
+  pinMode(trigPin,OUTPUT); //距離センサーのこと
+  pinMode(buttonPin, INPUT_PULLUP); //スイッチのこと
+
+}
+
+void loop() {
+
+//距離センサーのこと。ここから
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, LOW); //超音波を出力
+  delayMicroseconds(10);
+  digitalWrite(trigPin, HIGH);
+  Duration = pulseIn(echoPin, LOW); //センサからの入力
+
+  if (Duration > 0) {
+  Duration = Duration/2; //往復距離を半分
+  Distance = Duration*340*100/1000000; //音速を340m/sに設定 
+  Serial.print("Distance:");
+  Serial.print(Distance);
+  Serial.println("cm");  
+
+//距離センサーのこと。ここまで
+
+  }
+
+  buttonState = digitalRead(buttonPin); //スイッチのこと
+
+  if (Distance < 20 && buttonState == HIGH) { //Distance<20(20cmより小さい)→＜、＞と数値の変更ができます。buttonState == HIGH：ボタンが押されたら
+
+   digitalWrite(ledPin, LOW); //HIGH：光る　LOW：光らない(LEDのこと)
+   digitalWrite(buzzerPin, LOW); //HIGH：鳴る　LOW：鳴らない(ブザーのこと)
+   delay(200);
+
+  } else {
+
+    digitalWrite(ledPin, HIGH); //HIGH：光る　LOW：光らない(LEDのこと)
+    digitalWrite(buzzerPin, HIGH); //HIGH：鳴る　LOW：鳴らない(ブザーのこと)
+    delay(200);
+
+  }
+
+}
