@@ -1,0 +1,75 @@
+// 距離20cm以内でスイッチが押されるとブザーが鳴り、モーターが回る
+
+#include <Servo.h> //モーターを使うときは、これを入れます。
+Servo myservo; //モーターを使うときは、これを入れます。
+
+#define buzzerPin 16 //buzzerが2番ピン
+
+#define motorPin 17 //モーターが12番ピン
+
+#define echoPin 18 //距離センサーの「echo」が5番ピン
+#define trigPin 19 //距離センサーの「trig」が6番ピン
+
+#define buttonPin 15  //スイッチが12番ピン
+
+bool buttonState = 0; //スイッチのこと
+
+double Duration = 0; //受信した間隔(距離センサーのこと)
+double Distance = 0; //距離(距離センサーのこと)
+
+
+void setup() {
+  Serial.begin(9600);
+  
+  myservo.attach(motorPin,700,2300);
+  
+  pinMode(buzzerPin, OUTPUT); //LEDのこと
+  
+  pinMode(echoPin,INPUT_PULLUP); //距離センサーのこと
+  pinMode(trigPin,OUTPUT); //距離センサーのこと
+  pinMode(buttonPin, INPUT_PULLUP); //スイッチのこと
+
+}
+
+void loop() {
+
+//距離センサーのこと。ここから
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, LOW); //超音波を出力
+  delayMicroseconds(10);
+  digitalWrite(trigPin, HIGH);
+  Duration = pulseIn(echoPin, LOW); //センサからの入力
+
+  if (Duration > 0) {
+  Duration = Duration/2; //往復距離を半分
+  Distance = Duration*340*100/1000000; //音速を340m/sに設定 
+  Serial.print("Distance:");
+  Serial.print(Distance);
+  Serial.println("cm");  
+
+//距離センサーのこと。ここまで
+
+  }
+
+  buttonState = digitalRead(buttonPin); //スイッチのこと
+
+  if (Distance < 20 && buttonState == LOW) { //Distance<20(20cmより小さい)→＜、＞と数値の変更ができます。buttonState == HIGH：ボタンが押されたら
+
+   digitalWrite(buzzerPin, LOW); //HIGH：鳴る　LOW：鳴らない
+   delay(200);
+
+   myservo.write(1400); //時計回り(when 1450～700 µsec)　逆時計回り(when 1550～2300 µsec)　1500に近い方が回転がおそくなる 
+   delay(100);
+
+  } else {
+
+    digitalWrite(buzzerPin, HIGH); //HIGH：鳴る　LOW：鳴らない
+    delay(100);  
+    
+    myservo.write(1500); //モーターが止まる数値です。
+    delay(200);
+
+  }
+
+}
