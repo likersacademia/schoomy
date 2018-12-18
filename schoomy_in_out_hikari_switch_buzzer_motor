@@ -3,7 +3,7 @@
 #include <Servo.h>　//サーボモーターを動かす関数を用意します
 Servo myservo; //サーボモーターを動かす関数を用意します
 
-#define cdsPin 18 //光センサーが1番ピン
+#define cdsPin 4 //光センサーが1番ピン
 #define buttonPin 17 //スイッチが12番ピン
 
 #define buzzerPin 5 //buzzerが2番ピン
