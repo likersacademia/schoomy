@@ -1,0 +1,40 @@
+// 光量値を示すプログラム（10kΩプルダウン、5V電源時）
+
+
+
+#define cdsPin 4
+
+
+void setup() {
+ Serial.begin(9600);
+ pinMode(cdsPin, INPUT_PULLUP);
+
+}
+
+
+
+void loop() {
+  // R1のAD値を取得
+  float cds_ad = analogRead(cdsPin);
+
+  // AD値を電圧値に変換
+  float cds_v = cds_ad * 5 / 1023;
+
+  // 電圧値より、Lux計算
+  float lux = 10000 * cds_v / (5 - cds_v) / 1000;
+
+  Serial.print(lux);
+  Serial.println(" Lux ");
+
+  if (lux > 20) {
+    Serial.println("High lux");
+    delay(2000);
+ 
+ } else {
+
+    Serial.println("HIGH lux");
+    delay(2000);
+
+  }
+
+}
