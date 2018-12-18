@@ -1,0 +1,38 @@
+//時計回りのモーターが、ボタンを押すと、反時計回りになるプログラム
+
+#include <Servo.h>
+
+
+#define motorPin 5
+#define buttonPin 18
+
+int buttonState = 0;
+
+Servo myservo;
+
+void setup() {
+ myservo.attach(motorPin,700,2300);
+ pinMode(buttonPin, INPUT_PULLUP);
+
+ Serial.begin(9600);
+
+}
+
+void loop() {
+ buttonState = digitalRead(buttonPin);
+ 
+ if (buttonState == LOW) {
+  Serial.println("Switch ON"); 
+ 
+ //時計回り(when 1450～700 µsec)　逆時計回り(when 1550～2300 µsec)　1500に近い方が回転がおそくなる 
+  myservo.write(1600); //反時計回り
+  delay(100);
+
+  } else {
+  
+  myservo.write(1400); //時計回り
+  delay(100);
+
+  }
+
+}
