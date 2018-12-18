@@ -1,0 +1,27 @@
+//* スイッチのON-OFFをシリアルモニターに表示するプログラム
+
+#define buttonPin 18
+
+int buttonState = 0;
+
+
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(buttonPin, INPUT_PULLUP);
+
+}
+
+void loop() {
+  buttonState = digitalRead(buttonPin);
+  if (buttonState == LOW) {
+    Serial.println("Switch ON"); //Switch ONのところを好きな文章にできます
+    delay(1000); //判定間隔（1000=1秒）が変わります。
+
+  } else {
+
+    Serial.println("Switch OFF"); ////Switch OFFのところを好きな文章にできます
+    delay(1000); //判定間隔（1000=1秒）が変わります。
+  }
+
+}
