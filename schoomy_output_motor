@@ -1,0 +1,27 @@
+// モーターを360°回転させるプログラム
+
+#include <Servo.h>　//サーボモーターを動かす関数を用意します
+
+#define moterPin 5
+
+Servo myservo;
+
+void setup() {
+ myservo.attach(moterPin,700,2300);
+ Serial.begin(9600);
+ 
+}
+
+void loop() {
+ //時計回り(when 1450～700 µsec)　逆時計回り(when 1550～2300 µsec)　1500に近い方が回転がおそくなる
+ 
+  myservo.write(1400); //5秒間時計回り・・1
+  delay(5000);
+  
+  myservo.write(1550); //5秒間逆時計回り・・・2
+  delay(5000);
+
+
+//1→2と繰り返します。2の後に追加することもできます。
+
+}
