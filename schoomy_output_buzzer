@@ -1,0 +1,24 @@
+// ブザーが鳴るプログラム ピッピッピッピー
+
+#define buzzerPin 5
+
+void setup() {
+ pinMode(buzzerPin, OUTPUT);
+}
+
+void loop() {
+  for(int i=0; i <= 2; i++){
+    digitalWrite(buzzerPin, LOW);
+    delay(200);
+    digitalWrite(buzzerPin, HIGH);
+    delay(200);
+
+  }
+
+  delay(500);
+  digitalWrite(buzzerPin, LOW);
+  delay(1000);
+  digitalWrite(buzzerPin, HIGH);
+  delay(1000); // void loopの中の数値を変更します
+
+}
