@@ -1,0 +1,32 @@
+// スイッチが押されたときにLEDを点滅させるプログラム
+
+
+#define buttonPin 18
+#define ledPin 17
+
+bool buttonState = 0;
+
+void setup() {
+ pinMode(ledPin, OUTPUT);
+ pinMode(buttonPin, INPUT_PULLUP);
+
+}
+
+void loop() {
+ buttonState = digitalRead(buttonPin);
+
+ if (buttonState == LOW) {
+
+    digitalWrite(ledPin, LOW);
+    delay(200);
+
+    digitalWrite(ledPin, HIGH);
+    delay(200);
+
+  } else {
+
+    digitalWrite(ledPin, HIGH);
+
+  }
+
+}
