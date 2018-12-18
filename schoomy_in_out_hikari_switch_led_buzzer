@@ -1,6 +1,6 @@
 // 電気が消え、かつスイッチが押されるとLEDがついて、ブザーも鳴る
 
-#define cdsPin 18 //光センサーが1番ピン
+#define cdsPin 4 //光センサーが1番ピン
 #define buttonPin 17 //スイッチが12番ピン
 
 #define ledPin 5 //LEDが2番ピン
